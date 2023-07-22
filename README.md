@@ -38,7 +38,43 @@ Start the setup script:
 
 ```./sample-configs/aap-workshop-setup.sh```
 
+    Current Settings
+    ----------------
+    Project Name         ...
+    Vault Ansible UID/PW ... - /
+    Vault RHSM    UID/PW ...  /
+    Vault AAP     UID/PW ... admin /
+    Vault LibVirt UID/PW ... root /
+    Vault oVirt   UID/PW ... admin@internal /
+    Password BMC Default    ...
+    Ansible Source          ... INSTALLED
+    Ansible Control Host IP ...
+    AAP Version             ...
+    Network (id/pre/nm/bc)  ...  /  /  /
+    Network Gateway         ...
+    Network DNS Server      ...
+    Network TIME Server     ...
+    Network Base Domain     ...
+    vHost Type              ...
+    NODE SETTINGS (ip/mac/hw/bmc/name)
+    Bastion  :  /  /  /  / bastion
+    AAP:  /  /  /  / aap
+    Node1  :  /  /  /  / node1
+    Node2  :  /  /  /  / node2
+    Node3  :  /  /  /  / node3
+    Node4  :  /  /  /  / node4
+    
+    1) Set Project Name    4) AAP Settings        7) Node Settings
+    2) Vault Settings      5) Network Settings    8) Prepare Deployment
+    3) Ansible Settings    6) Virt Host Settings  9) Save & Quit
+    MAIN MENU (select action):
 
-More instructions coming soon...
+
+More detailed instructions on coming soon...
+
+
+When you are done answering the questions, you must choose `Prepare Deployment` to actually write (template) the configs.  Hit CTL-C to exit the setup script, or `Save & Quit` to save the current answers without preparing the deployment.
+
+
 
 
