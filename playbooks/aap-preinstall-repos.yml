@@ -1,0 +1,37 @@
+
+## Authors: 
+##   Christoph Doerbeck
+##
+## Summary:
+##
+
+---
+- hosts: myAAP, !myShelter
+  tasks:
+
+  - name: "AAP-PREINSTALL-REPOS: disable all RHSM repos"
+    shell:
+      cmd: subscription-manager repos --disable="*"
+
+  - name: "AAP-PREINSTALL-REPOS: disable all LOCAL repos"
+    shell:
+      cmd: subscription-manager repos --disable="*"
+      cmd: |
+        for i in `ls /etc/yum.repos.d | grep -v redhat.repo` ; do
+          sed -i 's/enabled = 1/enabled = 0/g' /etc/yum.repos.d/${i}
+        done
+
+
+  ##
+  ## NOTE:  the with_items splits the comma separated list
+  ##        of channels and prints a --enable=<val> for each
+  ##        element.  Nice side effect is the the item
+  ##        is output during execution
+  ##
+
+  - name: "AAP-PREINSTALL-REPOS: enable needed repos"
+    shell:
+      cmd: subscription-manager repos {{ item }}
+    with_items:
+      - "{% for R in aap_assets[workshop_vars.aap_version]['repos'].split(',') %} --enable={{ R }}{% endfor %}"
+

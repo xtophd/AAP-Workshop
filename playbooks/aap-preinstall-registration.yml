@@ -1,0 +1,69 @@
+
+## Authors: 
+##   Christoph Doerbeck
+##
+## Summary:
+##
+
+---
+- hosts: myAAP, !myShelter
+  tasks:
+
+
+
+  ##
+  ##    Prompt for username/pass if rhsm_username
+  ##    is not defined
+  ##
+
+  - block:
+
+      - name: "AAP-PREINSTALL-REGISTRATION: collect RHSM username"
+        pause:
+          prompt: "Enter RHSM username: "
+          echo: yes
+        register: prompt_username
+    
+      - set_fact:
+          rhsm_credentials.username: prompt_username.user_input
+
+    when: rhsm_credentials.username is undefined 
+
+
+
+  - block:
+
+      - name: "AAP-PREINSTALL-REGISTRATION: collect RHN password"
+        pause:
+          prompt: "Enter RHN password: "
+          echo: no
+        register: prompt_password
+
+      - set_fact:
+          rhsm_credentials.password: prompt_password.user_input
+
+    when: rhsm_credentials.password is undefined
+
+  ##
+  ##    Register system
+  ##
+  ##    HELPFULL LINK: https://www.redhat.com/en/blog/subscription-manager-former-red-hat-network-user-part-2-subscription-manager-learns-grep
+  ##
+
+  - name: "AAP-PREINSTALL-REGISTRATION: subscription-manager clean"
+    shell:
+      cmd: subscription-manager clean
+
+  - name: "AAP-PREINSTALL-REGISTRATION: subscription-manager register"
+    shell:
+      cmd: subscription-manager register --username="{{ rhsm_credentials.username }}" --password="{{ rhsm_credentials.password }}" --force
+
+  - name: "AAP-PREINSTALL-REGISTRATION: subscription-manager identify pool and attach"
+    shell:
+      cmd: subscription-manager list --available --matches 'Red Hat Enterprise Linux for x86_64' --pool-only | sort | head -n 1 | subscription-manager attach --file=-
+
+  - name: "AAP-PREINSTALL-REGISTRATION: subscription-manager identify pool and attach"
+    shell:
+      cmd: subscription-manager list --available --matches 'Red Hat Ansible Automation Platform' --pool-only | sort | head -n 1 | subscription-manager attach --file=-
+
+

@@ -1,0 +1,35 @@
+## Authors: 
+##   Christoph Doerbeck
+##
+## Summary:
+##
+
+---
+
+- hosts: myAAP,myNodes,MyBastion
+  tags: always
+  tasks:
+
+    - name: "aap.yml : load variables"
+      include_vars:
+        file: "../config/credentials.yml"
+      when: aap_credentials is undefined
+
+
+
+- import_playbook: bastion-dns.yml
+  tags:
+    - bastion
+
+- import_playbook: aap-preinstall-registration.yml
+  tags:
+    - registration
+
+- import_playbook: aap-preinstall-repos.yml
+  tags:
+    - repos
+
+- import_playbook: aap-preinstall-hostprep.yml
+  tags:
+    - prep
+

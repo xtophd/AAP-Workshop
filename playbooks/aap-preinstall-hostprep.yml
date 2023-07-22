@@ -1,0 +1,68 @@
+---
+- hosts: myNodes, myAAP, !myShelter
+  tasks:
+
+    - name: "AAP-PREINSTALL-HOSTPREP: set hostname"
+      hostname:
+        name: "{{ inventory_hostname }}"
+
+    - name: "AAP-PREINSTALL-HOSTPREP: modify /etc/motd"
+      template:
+        src: motd-aap-workshop.j2
+        dest: /etc/motd
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: "AAP-PREINSTALL-HOSTPREP: yum install misc required packages (RHEL 7)"
+      yum: name=wget,git,net-tools,bind-utils,yum-utils,iptables-services,bridge-utils,bash-completion,kexec-tools,sos,psacct,firewalld state=installed
+      when:
+        - ansible_distribution_major_version == '7'
+
+    - name: "AAP-PREINSTALL-HOSTPREP: yum install misc required packages (RHEL 8)"
+      yum: name=wget,git,net-tools,bind-utils,yum-utils,iptables-services,iproute,bash-completion,kexec-tools,sos,psacct,firewalld state=installed
+      when:
+        - ansible_distribution_major_version == '8'
+
+    - name: "AAP-PREINSTALL-HOSTPREP: service restart firewalld"
+      service: name=firewalld state=restarted enabled=yes
+
+
+
+- hosts: myAAP, !myShelter
+  tasks:
+
+    - name: "AAP-PREINSTALL-HOSTPREP: debug of workshop_vars.aap_version"
+      debug: var=workshop_vars.aap_version
+
+    - name: "AAP-PREINSTALL-HOSTPREP: debug of aap_assets[{{ workshop_vars.aap_version }}]"
+      debug: var=aap_assets[workshop_vars.aap_version]
+
+    - name: "AAP-PREINSTALL-HOSTPREP: install AAP platform installer (RHEL 8)"
+      yum: name=ansible-automation-platform-installer.noarch state=installed
+      when:
+        - ansible_distribution_major_version == '8'
+
+    - name: "AAP-PREINSTALL-HOSTPREP: configure firewalld"
+      shell:
+        cmd: |
+          firewall-cmd --add-port="{{ item.port }}"
+      with_items:
+        - {port: "80/tcp"}
+        - {port: "443/tcp"}
+        - {port: "5432/tcp"}
+
+    - name: "AAP-PREINSTALL-HOSTPREP: deploy installation inventory"
+      template:
+        src: aap-{{ workshop_vars.aap_version }}-installation-inventory.j2
+        dest: /opt/ansible-automation-platform/installer/inventory
+        owner: root
+        group: root
+        mode: 0600
+
+    - name: "AAP-PREINSTALL-HOSTPREP: install ansible application platform (aap)"
+      shell:
+        chdir: "/opt/ansible-automation-platform/installer/" 
+        cmd: ./setup.sh
+              
+
