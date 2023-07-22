@@ -34,5 +34,7 @@ The easiest method to creating a working config is the us the setup tool and wor
 
 If you plan to deploy your own hosts, you still need to go through the configuration steps ... but instead of running `xtoph_deploy.sh` to begin the install, you will simply execute `aap-workshop.sh`.
 
+:note: the setup script creates config files in `./config`.  All setup answers are saved in `aap-workshop-setup.ans`, although passwords are NEVER saved in the answer file.  So each time you invoke the setup to rebuild all the configs, you will need to walk through all the password entries in the menu.  Passwords ARE stored however in the ansible-vault encrypted file `credentials.yml`.
+
 
 
