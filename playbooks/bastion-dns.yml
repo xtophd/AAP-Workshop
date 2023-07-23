@@ -145,11 +145,11 @@
 - hosts: myAAP,myNodes
   tasks:
 
-    - debug: msg="DNS IP = {{ hostvars[groups['myBastion'][0]]['ansible_default_ipv4']['address'] }}"
+    - debug: msg="DNS IP = {{ hostvars[groups['myBastion'][0]]['h_pubIP'] }}"
 
     - name: "AAP-WORKSHOP : bastion-dns : fix nodes nodes to use bastion for dns"
       vars:
-        t_dns: "{{ hostvars[groups['myBastion'][0]]['ansible_default_ipv4']['address'] }}"
+        t_dns: "{{ hostvars[groups['myBastion'][0]]['h_pubIP'] }}"
       shell:
         cmd: |
              nmcli -g name,type connection  show  --active | awk -F: '/ethernet|wireless/ { print $1 }' | while read connection
