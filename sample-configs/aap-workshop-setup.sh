@@ -823,14 +823,12 @@ aap_menu () {
       case ${action}  in
 
         "Set Version")
-           select AAP_VERSION in "2.3" "2.2" "2.1"
+           select AAP_VERSION in "2.3" "2.2"
            do
               case ${AAP_VERSION} in
                 "2.3" )
                   break ;;
                 "2.2" )
-                  break ;;
-                "2.1" )
                   break ;;
                 "*" )
                   ;;
