@@ -1,5 +1,11 @@
 aap_assets:
 
+  "2.4":
+    name: "aap"
+    version: "2.4"
+    repos: "rhel-8-for-x86_64-baseos-rpms,rhel-8-for-x86_64-appstream-rpms,ansible-automation-platform-2.4-for-rhel-8-x86_64-rpms"
+    setup: "--FILENAME-TBD--"
+
   "2.3":
     name: "aap"
     version: "2.3"

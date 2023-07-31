@@ -92,9 +92,13 @@ myLibvirtHosts:
   hosts:
 {% if t_virthost_type == "libvirt" and t_virthost_fqdn|length %}
     {{ t_virthost_fqdn }}:
-      h_pubIP:       "{{ t_virthost_ip }}"
-      h_plPROF:      "custom_kvmhost"
+      h_pubIP:  "{{ t_virthost_ip }}"
+      h_plPROF: "custom_kvmhost"
+{% if t_virthost_fqdn == "localhost.localdomain" %}
+      ansible_connection: local
 {% endif %}
+{% endif %}
+
 
 
 ## -----------------
