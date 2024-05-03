@@ -38,6 +38,11 @@
     - name: "AAP-PREINSTALL-HOSTPREP: debug of aap_assets[{{ workshop_vars.aap_version }}]"
       debug: var=aap_assets[workshop_vars.aap_version]
 
+    - name: "AAP-PREINSTALL-HOSTPREP: install extra RHEL packages (RHEL 8)"
+      yum: name=policycoreutils-python-utils state=installed
+      when:
+        - ansible_distribution_major_version == '8'
+
     - name: "AAP-PREINSTALL-HOSTPREP: install AAP platform installer (RHEL 8)"
       yum: name=ansible-automation-platform-installer.noarch state=installed
       when:
